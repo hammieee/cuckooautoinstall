@@ -1,3 +1,16 @@
+About this repo forked from buguroo
+=======================
+
+I have forked this and added some changes to help install cuckoo.
+Since the master repo is not maintained, I have added a few more steps to make the painful
+cuckoo installation quicker, easier and painless
+
+OS: `ubuntu-18.04.3-desktop-amd64 <http://releases.ubuntu.com/18.04/>`
+
+RAM: 8 GB
+
+Processor: 4 Cores
+
 About CuckooAutoinstall
 =======================
 
@@ -41,41 +54,11 @@ Authors
 Quickstart guide
 ================
 
-* Clone this repo & execute the script: *bash cuckooautoinstall.bash*
+* Clone this repo & execute the script: *bash cuckooautoinstall.bash -v*
+
+It will help to install most of the requirements and dependencies needed to install cuckoo
 
 .. image:: /../screenshots/cuckooautoinstall.png?raw=true
-
-
-If you trust us, your network setup and a lot of more variables enough
-(which is totally not-recommended) and you're as lazy as it gets, you can
-execute as a normal user if you've got sudo configured:
-
-::
-
-    wget -O - https://raw.githubusercontent.com/buguroo/cuckooautoinstall/master/cuckooautoinstall.bash | bash
-
-
-The script does accept a configuration file in the form of a simple
-bash script with options such as:
-
-::
-
-    SUDO="sudo"
-    TMPDIR=$(mktemp -d)
-    RELEASE=$(lsb_release -cs)
-    CUCKOO_USER="cuckoo"
-    CUSTOM_PKGS=""
-    ORIG_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}"   )" && pwd   )
-    VOLATILITY_URL="http://downloads.volatilityfoundation.org/releases/2.4/volatility-2.4.tar.gz"
-    VIRTUALBOX_REP="deb http://download.virtualbox.org/virtualbox/debian $RELEASE contrib"
-    CUCKOO_REPO='https://github.com/cuckoobox/cuckoo'
-    YARA_REPO="https://github.com/plusvic/yara"
-    JANSSON_REPO="https://github.com/akheron/jansson"
-
-    LOG=$(mktemp)
-    UPGRADE=false
-
-You can override any of these variables in the config file.
 
 It accepts parameters
 
@@ -95,11 +78,48 @@ It accepts parameters
 
 For most setups, --upgrade is recommended always.
 
+* Install other requirements
+
+::
+
+    sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
+
 * Add a password (as root) for the user *'cuckoo'* created by the script
 
 ::
 
     passwd cuckoo
+
+* Create a virtual environment
+
+::
+
+    virtualenv venv
+
+* Activate the virtual environment
+
+::
+
+    . venv/bin/activate
+
+* Install distorm3 and volatility
+
+::
+
+    pip install distorm3
+    pip install -U git+https://github.com/volatilityfoundation/volatility.git
+
+* Install tcpdump and allow non-root user to use tcpdump
+
+::
+
+    sudo apt-get install tcpdump apparmor-utils
+    sudo aa-disable /usr/sbin/tcpdump
+    sudo apt-get install tcpdump
+    sudo groupadd pcap
+    sudo usermod -a -G pcap cuckoo
+    sudo chgrp pcap /usr/sbin/tcpdump
+    sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump
 
 * Create the virtual machines `http://docs.cuckoosandbox.org/en/latest/installation/guest/`
   or import virtual machines
@@ -114,26 +134,61 @@ For most setups, --upgrade is recommended always.
 
   vboxmanage modifyvm “virtual_machine" --hostonlyadapter1 vboxnet0
 
+* Install cuckoo 
+
+::
+
+  pip install -U cuckoo
+  
+* Initiate cuckoo for the first time 
+
+::
+
+  cuckoo -d
+  cuckoo community
+  
 * Configure cuckoo (`http://docs.cuckoosandbox.org/en/latest/installation/host/configuration/` )
 
+Enable memory_dump (memory_dump = yes)
+::
+  gedit .cuckoo/conf/cuckoo.conf
+
+Enable memory dump ([memory] enabled = yes)
+::
+  gedit .cuckoo/conf/processing.conf
+  
+Change guest profile (`https://github.com/volatilityfoundation/volatility/wiki/2.6-Win-Profiles`)
+::
+  gedit .cuckoo/conf/memory.conf
+  
+::
+  guest_profile = Win7SP1x64
+
+Enable mongodb for Web Interface and Generate HTML report
+::
+
+  gedit .cuckoo/conf/reporting.conf
+  
+::
+
+    [mongodb]
+    enabled = yes
+    
+    [singlefile]
+    # Enable creation of report.html and/or report.pdf?
+    enabled = yes
+    # Enable creation of report.html?
+    html = yes
+  
 * Execute cuckoo 
 
 ::
+    cuckoo -d
+    
+* Run cuckoo web interface
 
-  cd ~cuckoo/cuckoo
-  python cuckoo.py
-
-.. image:: /../screenshots/github%20cuckoo%20working.png?raw=true
-
-
-* Execute also django using port 6969
-
-::
-
-  cd ~cuckoo/cuckoo/web
-  python manage.py runserver 0.0.0.0:6969
-
-.. image:: /../screenshots/github%20django.png?raw=true
+:: 
+    cuckoo web -H <IP address>
 
 Script features
 =================
