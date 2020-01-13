@@ -55,7 +55,8 @@ Quickstart guide
 ================
 
 * Clone this repo & execute the script: 
-:: 
+::
+
     bash cuckooautoinstall.bash -v
 
 It will help to install most of the requirements and dependencies needed to install cuckoo
@@ -152,21 +153,29 @@ For most setups, --upgrade is recommended always.
 * Configure cuckoo (`http://docs.cuckoosandbox.org/en/latest/installation/host/configuration/` )
 
 Enable memory_dump (memory_dump = yes)
+
 ::
+
   gedit .cuckoo/conf/cuckoo.conf
 
 Enable memory dump ([memory] enabled = yes)
+
 ::
+
   gedit .cuckoo/conf/processing.conf
   
 Change guest profile (`https://github.com/volatilityfoundation/volatility/wiki/2.6-Win-Profiles`)
+
 ::
+
   gedit .cuckoo/conf/memory.conf
   
 ::
+
   guest_profile = Win7SP1x64
 
 Enable mongodb for Web Interface and Generate HTML report
+
 ::
 
   gedit .cuckoo/conf/reporting.conf
@@ -185,11 +194,13 @@ Enable mongodb for Web Interface and Generate HTML report
 * Execute cuckoo 
 
 ::
+
     cuckoo -d
     
 * Run cuckoo web interface
 
 :: 
+
     cuckoo web -H <IP address>
 
 Script features
