@@ -54,7 +54,9 @@ Authors
 Quickstart guide
 ================
 
-* Clone this repo & execute the script: *bash cuckooautoinstall.bash -v*
+* Clone this repo & execute the script: 
+:: 
+    bash cuckooautoinstall.bash -v
 
 It will help to install most of the requirements and dependencies needed to install cuckoo
 
