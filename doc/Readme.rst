@@ -5,7 +5,7 @@ I have forked this and added some changes to help install cuckoo.
 Since the master repo is not maintained, I have added a few more steps to make the painful
 cuckoo installation quicker, easier and painless
 
-OS: `ubuntu-18.04.3-desktop-amd64 <http://releases.ubuntu.com/18.04/>`
+OS: `ubuntu-18.04.3-desktop-amd64 <http://releases.ubuntu.com/18.04/>`_ 
 
 RAM: 8 GB
 
