@@ -125,7 +125,7 @@ For most setups, --upgrade is recommended always.
     sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump
 
 * `Create the virtual machines <http://docs.cuckoosandbox.org/en/latest/installation/guest/>`_
-  or * `import virtual machines <./doc/import.rst>`_ 
+  or `import virtual machines <./doc/import.rst>`_ 
 
 ::
 
